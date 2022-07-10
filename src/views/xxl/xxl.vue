@@ -22,19 +22,18 @@ const initList = (row: number = 10, col: number = 10) => {
   for (let i = 0; i < row; i++) {
     list.push([])
     for (let j = 0; j < col; j++) {
-      list[i].push([] as Render)
-      const temp_obj = {
+      list[i].push({
         color: getColorsByLevel.value[Math.floor(Math.random() * (level.value + 2))],
         is_null: false,
         x: j * row,
         y: i * col
-      }
-      list[i][j] = temp_obj
+      })
     }
   }
   return list
 }
 const list = ref(initList())
+console.log(list.value)
 
 const levelAdd = () => {
   if (level.value >= 5) {
