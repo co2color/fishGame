@@ -20,5 +20,8 @@ const router = createRouter({
     }
   ]
 })
+router.beforeEach(to => {
+  document.title = String(to.name)
+})
 
 export default router
