@@ -17,6 +17,11 @@ const router = createRouter({
       path: '/fishing',
       name: 'fishing',
       component: () => import('@/views/fishing/fishing.vue')
+    },
+    {
+      path: '/snake',
+      name: 'snake',
+      component: () => import('@/views/snake/snake.vue')
     }
   ]
 })

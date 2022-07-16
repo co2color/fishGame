@@ -44,13 +44,11 @@ const levelAdd = () => {
 }
 </script>
 <template>
-  <div>
+  <div class="game flex justify-center items-center">
     <button @click="levelAdd">add</button>
-    <div class="game flex justify-center items-center">
-      <div class="game-box">
-        <div class="game-list flex" v-for="(rows, row_index) in list" :key="row_index + 'row'">
-          <div class="game-item flex" :style="{ backgroundColor: item.color }" v-for="(item, index) in rows"></div>
-        </div>
+    <div class="game-box">
+      <div class="game-list flex" v-for="(rows, row_index) in list" :key="row_index + 'row'">
+        <div class="game-item flex" :style="{ backgroundColor: item.color }" v-for="(item, index) in rows"></div>
       </div>
     </div>
   </div>

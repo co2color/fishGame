@@ -9,6 +9,10 @@ const list = [
   {
     label: '消消乐',
     path: '/xxl'
+  },
+  {
+    label: '贪吃蛇',
+    path: '/snake'
   }
 ]
 const to = (path: string) => {
