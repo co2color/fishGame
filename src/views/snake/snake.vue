@@ -9,11 +9,8 @@ const canvasInit = () => {
   canvas.value!.width = WIDTH
   canvas.value!.height = HEIGHT
   context.value = canvas.value!.getContext('2d')
-  context.value!.strokeStyle = '#ccc'
-  context.value!.fillStyle = 'skyblue'
-  // context.value!.fillRect(0, 0, 100, 100)
-  //   context.value!.fillStyle = 'rgb(212,175,146)'
-  //   context.value!.fillRect(0, 0, 450, 450)
+  // context.value!.strokeStyle = '#ccc'
+  // context.value!.fillStyle = 'skyblue'
 }
 const renderFood = (color: string, x: number, y: number) => {
   context.value!.fillStyle = color
@@ -22,39 +19,53 @@ const renderFood = (color: string, x: number, y: number) => {
 const renderSnake = () => {
   context.value!.clearRect(0, 0, WIDTH, HEIGHT)
 }
-let x = 0,
-  y = 0
+
 const move = () => {
+  context.value!.clearRect(0, 0, WIDTH, HEIGHT)
+  renderFood('pink', location.value.x, location.value.y)
+  return
   const t = setInterval(() => {
     context.value!.clearRect(0, 0, WIDTH, HEIGHT)
-    renderFood('red', x, y)
-    x++
-    if (x > 49) {
-      x = 0
-      y++
-    }
-  }, 60)
+    renderFood('pink', location.value.x, location.value.y)
+  }, 30)
 }
-function drawChessBoard() {
-  for (var i = 0; i <= WIDTH / SIZE; i++) {
-    //设置横线起始点的坐标
-    context.value!.moveTo(0, i * SIZE + 0.5)
-    //设置横线结束点的坐标
-    context.value!.lineTo(WIDTH, i * SIZE + 0.5)
-    //连接2点
-    context.value!.stroke()
 
-    // 设置竖线的起始点坐标
-    context.value!.moveTo(i * SIZE + 0.5, 0)
-    //设置竖线的结束点坐标
-    context.value!.lineTo(i * SIZE + 0.5, HEIGHT)
-    //连接2点
-    context.value!.stroke()
-  }
-}
+document.addEventListener(
+  'keydown',
+  event => {
+    console.log(event)
+    if (event.code === 'KeyW') {
+      if (location.value.y > 0) {
+        location.value.y--
+      }
+    }
+    if (event.code === 'KeyS') {
+      if (location.value.y < HEIGHT / SIZE - 1) {
+        location.value.y++
+      }
+    }
+    if (event.code === 'KeyA') {
+      if (location.value.x > 0) {
+        location.value.x--
+      }
+    }
+    if (event.code === 'KeyD') {
+      if (location.value.x < WIDTH / SIZE - 1) {
+        location.value.x++
+      }
+    }
+    move()
+  },
+  true
+)
+
+const location = ref({
+  x: WIDTH / SIZE / 2,
+  y: WIDTH / SIZE / 2,
+  currentLocation: 'w'
+})
 onMounted(() => {
   canvasInit()
-  //   drawChessBoard()
   move()
 })
 </script>
