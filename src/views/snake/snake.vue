@@ -5,6 +5,15 @@ const context = ref<CanvasRenderingContext2D | null>(null)
 const WIDTH = 500,
   HEIGHT = 500,
   SIZE = 10
+
+const initSnakeList = [
+  { x: 20, y: 10 },
+  { x: 20, y: 11 },
+  { x: 20, y: 12 }
+]
+const snakeList = ref(initSnakeList)
+const currentLocation = ref('KeyS')
+
 const canvasInit = () => {
   canvas.value!.width = WIDTH
   canvas.value!.height = HEIGHT
@@ -12,61 +21,83 @@ const canvasInit = () => {
   // context.value!.strokeStyle = '#ccc'
   // context.value!.fillStyle = 'skyblue'
 }
-const renderFood = (color: string, x: number, y: number) => {
+const renderItem = (color: string, x: number, y: number) => {
   context.value!.fillStyle = color
   context.value!.fillRect(x * SIZE, y * SIZE, SIZE, SIZE)
 }
 const renderSnake = () => {
-  context.value!.clearRect(0, 0, WIDTH, HEIGHT)
+  snakeList.value.forEach(item => {
+    renderItem('pink', item.x, item.y)
+  })
 }
 
-const move = () => {
-  context.value!.clearRect(0, 0, WIDTH, HEIGHT)
-  renderFood('pink', location.value.x, location.value.y)
-  return
+const touchWallWatch = () => {
+  const headItem = snakeList.value[0]
+  if (headItem.y === 0 - 1 || headItem.y === HEIGHT / SIZE || headItem.x === 0 - 1 || headItem.x === WIDTH / SIZE) {
+    return true
+  }
+  return false
+}
+const moveSnake = () => {
+  if (currentLocation.value === 'KeyW') {
+    snakeList.value.unshift({
+      x: snakeList.value[0].x,
+      y: snakeList.value[0].y - 1
+    })
+    snakeList.value.pop()
+  } else if (currentLocation.value === 'KeyS') {
+    snakeList.value.unshift({
+      x: snakeList.value[0].x,
+      y: snakeList.value[0].y + 1
+    })
+    snakeList.value.pop()
+  } else if (currentLocation.value === 'KeyA') {
+    snakeList.value.unshift({
+      x: snakeList.value[0].x - 1,
+      y: snakeList.value[0].y
+    })
+    snakeList.value.pop()
+  } else if (currentLocation.value === 'KeyD') {
+    snakeList.value.unshift({
+      x: snakeList.value[0].x + 1,
+      y: snakeList.value[0].y
+    })
+    snakeList.value.pop()
+  }
+}
+const startGame = () => {
   const t = setInterval(() => {
     context.value!.clearRect(0, 0, WIDTH, HEIGHT)
-    renderFood('pink', location.value.x, location.value.y)
-  }, 30)
+    renderSnake()
+    moveSnake()
+    if (touchWallWatch()) {
+      clearInterval(t)
+    }
+  }, 50)
 }
 
 document.addEventListener(
   'keydown',
   event => {
-    console.log(event)
     if (event.code === 'KeyW') {
-      if (location.value.y > 0) {
-        location.value.y--
-      }
+      currentLocation.value = 'KeyW'
     }
     if (event.code === 'KeyS') {
-      if (location.value.y < HEIGHT / SIZE - 1) {
-        location.value.y++
-      }
+      currentLocation.value = 'KeyS'
     }
     if (event.code === 'KeyA') {
-      if (location.value.x > 0) {
-        location.value.x--
-      }
+      currentLocation.value = 'KeyA'
     }
     if (event.code === 'KeyD') {
-      if (location.value.x < WIDTH / SIZE - 1) {
-        location.value.x++
-      }
+      currentLocation.value = 'KeyD'
     }
-    move()
   },
   true
 )
 
-const location = ref({
-  x: WIDTH / SIZE / 2,
-  y: WIDTH / SIZE / 2,
-  currentLocation: 'w'
-})
 onMounted(() => {
   canvasInit()
-  move()
+  startGame()
 })
 </script>
 <template>
