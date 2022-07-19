@@ -18,12 +18,19 @@ const canvasInit = () => {
   canvas.value!.width = WIDTH
   canvas.value!.height = HEIGHT
   context.value = canvas.value!.getContext('2d')
-  // context.value!.strokeStyle = '#ccc'
-  // context.value!.fillStyle = 'skyblue'
 }
 const renderItem = (color: string, x: number, y: number) => {
   context.value!.fillStyle = color
   context.value!.fillRect(x * SIZE, y * SIZE, SIZE, SIZE)
+}
+const foodLocation = ref(
+  {
+    x: Math.floor(Math.random() * WIDTH / SIZE),
+    y: Math.floor(Math.random() * WIDTH / SIZE)
+  }
+)
+const renderFood = (color: string = 'skyblue') => {
+  renderItem(color, foodLocation.value.x, foodLocation.value.y)
 }
 const renderSnake = () => {
   snakeList.value.forEach(item => {
@@ -110,6 +117,7 @@ onMounted(() => {
 .game {
   width: 100vw;
   height: 100vh;
+
   canvas {
     border: 1px solid #ccc;
   }
