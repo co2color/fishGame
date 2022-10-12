@@ -13,6 +13,10 @@ const list = [
   {
     label: '贪吃蛇',
     path: '/snake'
+  },
+  {
+    label: '2048',
+    path: '/2048'
   }
 ]
 const to = (path: string) => {
