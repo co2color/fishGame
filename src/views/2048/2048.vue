@@ -19,7 +19,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import NumberBlock from './NumberBlock.vue'
 let uid = 0
 
-const grid = [[], [], [], []]
+const grid = [[], [], [], []] as any[]
 const numberList = ref([] as any[]).value
 
 // 计分
@@ -58,7 +58,7 @@ function random() {
   }
 }
 // 创建number
-function createNumber(x, y) {
+function createNumber(x: number, y: number) {
   let number = ref({
     x,
     y,
@@ -69,7 +69,7 @@ function createNumber(x, y) {
   numberList.push(number)
 }
 // 移除number
-function removeNumber(i) {
+function removeNumber(i: number) {
   numberList.splice(i, 1)
 }
 
@@ -105,7 +105,7 @@ function right() {
   }
 }
 
-function move(x, y, dir) {
+function move(x: number, y: number, dir: string) {
   let self = grid[x][y]
   if (!self) return
 
@@ -141,7 +141,7 @@ function move(x, y, dir) {
 }
 
 let _moved = false // 是否移动过
-function moveTo(self, x, y) {
+function moveTo(self: any, x: number, y: number) {
   // 判断下一格是否能移动，以及是否合并
   if (grid[x][y]) {
     if (grid[x][y].number === self.number) {
@@ -180,7 +180,7 @@ function isEnded() {
   alert('您的得分是：' + score.value + '分')
 }
 
-function listener(e) {
+function listener(e: KeyboardEvent) {
   switch (e.keyCode) {
     case 38:
     case 87:
