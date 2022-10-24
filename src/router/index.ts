@@ -9,9 +9,9 @@ const router = createRouter({
       component: () => import('@/views/HomeView.vue')
     },
     {
-      path: '/xxl',
-      name: 'xxl',
-      component: () => import('@/views/xxl/xxl.vue')
+      path: '/anipop',
+      name: 'anipop',
+      component: () => import('@/views/anipop/anipop.vue')
     },
     {
       path: '/fishing',

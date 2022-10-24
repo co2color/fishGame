@@ -8,7 +8,7 @@ const list = [
   },
   {
     label: '消消乐',
-    path: '/xxl'
+    path: '/anipop'
   },
   {
     label: '贪吃蛇',
