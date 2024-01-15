@@ -17,6 +17,10 @@ const list = [
   {
     label: '2048',
     path: '/2048'
+  },
+  {
+    label: 'tictactoe',
+    path: '/tictactoe'
   }
 ]
 const to = (path: string) => {

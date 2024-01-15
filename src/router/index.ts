@@ -27,6 +27,11 @@ const router = createRouter({
       path: '/2048',
       name: '2048',
       component: () => import('@/views/2048/2048.vue')
+    },
+    {
+      path: '/tictactoe',
+      name: 'tictactoe',
+      component: () => import('@/views/tictactoe/Tictactoe.vue')
     }
   ]
 })
