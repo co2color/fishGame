@@ -1,3 +1,14 @@
+<script lang="ts" setup>
+import { ref } from 'vue'
+
+const board = ref(new Array(9).fill(''))
+
+function makeMove(index: number) {
+  console.log(index)
+}
+function resetBoard() {}
+</script>
+
 <template>
   <div>
     <h1>Tic Tac Toe</h1>
@@ -9,10 +20,6 @@
     <button @click="resetBoard">Reset</button>
   </div>
 </template>
-
-<script lang="ts" setup>
-import { ref } from 'vue'
-</script>
 
 <style>
 .board {
