@@ -3,8 +3,12 @@ import { ref } from 'vue'
 
 const board = ref(new Array(9).fill(''))
 
+// 定义当前玩家
+const currentPlayer = ref('X')
+
 function makeMove(index: number) {
-  console.log(index)
+  board.value[index] = currentPlayer.value
+  currentPlayer.value = currentPlayer.value === 'X' ? 'O' : 'X'
 }
 function resetBoard() {}
 </script>
