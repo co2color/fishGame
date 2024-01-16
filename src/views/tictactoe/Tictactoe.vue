@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, nextTick } from 'vue'
+import { ref } from 'vue'
 
 function getInitBoard() {
   return new Array(9).fill('')
@@ -10,18 +10,33 @@ const board = ref(getInitBoard())
 // 定义当前玩家
 const currentPlayer = ref('X')
 
+const message = ref('')
+
 function makeMove(index: number) {
+  // 如果当前格子已经有值或者已经有人赢了，就不允许再走了
+  if (board.value[index] || message.value) {
+    return
+  }
+
   board.value[index] = currentPlayer.value
 
   if (checkWin()) {
-    console.log(`${currentPlayer.value} win!`)
+    message.value = `${currentPlayer.value} win!`
     return
   }
+
+  // 如果满了，就平局结束
+  if (board.value.every((item) => item)) {
+    message.value = '平局...'
+    return
+  }
+
   currentPlayer.value = currentPlayer.value === 'X' ? 'O' : 'X'
 }
 function resetBoard() {
   board.value = getInitBoard()
   currentPlayer.value = 'X'
+  message.value = ''
 }
 
 function checkWin() {
@@ -47,15 +62,15 @@ function checkWin() {
 </script>
 
 <template>
-  <div>
-    {{ board }}
-    <h1>Tic Tac Toe</h1>
+  <!-- 居中 -->
+  <div class="w-full flex flex-col justify-center items-center">
+    <h1 class="py-4">{{ message || `当前该${currentPlayer}走` }}</h1>
     <div class="board">
       <div v-for="(cell, index) in board" :key="index" @click="makeMove(index)">
         {{ cell }}
       </div>
     </div>
-    <button @click="resetBoard">Reset</button>
+    <button class="pt-4" @click="resetBoard">Reset</button>
   </div>
 </template>
 
