@@ -18,20 +18,21 @@ function makeMove(index: number) {
     return
   }
 
+  // 下棋
   board.value[index] = currentPlayer.value
 
+  // 如果有胜负
   if (checkWin()) {
     message.value = `${currentPlayer.value} win!`
-    return
   }
-
-  // 如果满了，就平局结束
-  if (board.value.every((item) => item)) {
+  // 如果平局
+  else if (board.value.every((item) => item)) {
     message.value = '平局...'
-    return
   }
-
-  currentPlayer.value = currentPlayer.value === 'X' ? 'O' : 'X'
+  // 切换玩家
+  else {
+    currentPlayer.value = currentPlayer.value === 'X' ? 'O' : 'X'
+  }
 }
 function resetBoard() {
   board.value = getInitBoard()
@@ -62,7 +63,6 @@ function checkWin() {
 </script>
 
 <template>
-  <!-- 居中 -->
   <div class="w-full flex flex-col justify-center items-center">
     <h1 class="py-4">{{ message || `当前该${currentPlayer}走` }}</h1>
     <div class="board">
