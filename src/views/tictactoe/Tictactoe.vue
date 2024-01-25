@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { cloneDeep } from 'lodash-es'
 import { ref } from 'vue'
 
 function getInitBoard() {
@@ -58,13 +59,14 @@ function resetBoard() {
   message.value = ''
 }
 
-function goToStep(index: number) {
+function goToStep(uid: string) {
+  const findIndex = historyList.value.findIndex((item) => item.uid === uid)
   const { board: newBoard, currentPlayer: newCurrentPlayer } =
-    historyList.value[index]
-  board.value = newBoard
+    historyList.value[findIndex]
+  board.value = [...newBoard]
   currentPlayer.value = newCurrentPlayer
   message.value = ''
-  historyList.value = historyList.value.slice(0, index + 1)
+  historyList.value = historyList.value.slice(0, findIndex + 1)
 }
 
 function checkWin() {
@@ -111,10 +113,10 @@ function checkWin() {
         <button
           class="mt-1 p-2 button"
           :key="item.uid"
-          @click="goToStep(index)"
+          @click="goToStep(item.uid)"
           v-for="(item, index) in historyList"
         >
-          go to step{{ index + 1 }}
+          go to step {{ index + 1 }}
         </button>
       </div>
     </div>
