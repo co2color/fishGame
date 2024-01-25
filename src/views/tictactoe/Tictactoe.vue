@@ -57,6 +57,7 @@ function resetBoard() {
   board.value = getInitBoard()
   currentPlayer.value = 'X'
   message.value = ''
+  historyList.value = []
 }
 
 function goToStep(uid: string) {
