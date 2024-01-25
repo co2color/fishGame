@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="title">总分： {{ score }}</div>
+    <div class="title my-2">总分： {{ score }}</div>
     <div class="game">
       <!-- 背景布局 -->
       <div class="game-bg">
@@ -8,8 +8,14 @@
       </div>
 
       <div class="canvas">
-        <NumberBlock v-for="(v, i) in numberList" :key="v.uid" :item="v" @remove="removeNumber(i)" />
+        <NumberBlock
+          v-for="(v, i) in numberList"
+          :key="v.uid"
+          :item="v"
+          @remove="removeNumber(i)"
+        />
       </div>
+      <h3 class="title mt-4">使用键盘方向键控制</h3>
     </div>
   </div>
 </template>
@@ -63,7 +69,7 @@ function createNumber(x: number, y: number) {
     x,
     y,
     number: 1,
-    uid: ++uid
+    uid: ++uid,
   }).value
   grid[x][y] = number
   numberList.push(number)
