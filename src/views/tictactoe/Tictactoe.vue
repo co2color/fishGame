@@ -5,6 +5,13 @@ function getInitBoard() {
   return new Array(9).fill('')
 }
 
+interface IHistory {
+  board: string[]
+  currentPlayer: string
+}
+
+const historyList: IHistory[] = []
+
 const board = ref(getInitBoard())
 
 // 定义当前玩家
@@ -32,6 +39,10 @@ function makeMove(index: number) {
   // 切换玩家
   else {
     currentPlayer.value = currentPlayer.value === 'X' ? 'O' : 'X'
+    historyList.push({
+      board: board.value.slice(),
+      currentPlayer: currentPlayer.value,
+    })
   }
 }
 function resetBoard() {
@@ -63,14 +74,23 @@ function checkWin() {
 </script>
 
 <template>
-  <div class="w-full flex flex-col justify-center items-center">
-    <h1 class="py-4">{{ message || `当前该${currentPlayer}走` }}</h1>
-    <div class="board">
-      <div v-for="(cell, index) in board" :key="index" @click="makeMove(index)">
-        {{ cell }}
+  <div class="flex w-full justify-center items-center">
+    <div class="flex flex-col justify-center items-center">
+      <h1 class="py-4">{{ message || `当前该${currentPlayer}走` }}</h1>
+      <div class="board">
+        <div
+          v-for="(cell, index) in board"
+          :key="index"
+          @click="makeMove(index)"
+        >
+          {{ cell }}
+        </div>
       </div>
+      <button class="pt-4" @click="resetBoard">Reset</button>
     </div>
-    <button class="pt-4" @click="resetBoard">Reset</button>
+    <div class="ml-4">
+      <button v-for="item in historyList"></button>
+    </div>
   </div>
 </template>
 
