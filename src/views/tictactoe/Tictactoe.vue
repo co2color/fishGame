@@ -8,9 +8,15 @@ function getInitBoard() {
 interface IHistory {
   board: string[]
   currentPlayer: string
+  uid: string
 }
 
-const historyList: IHistory[] = []
+// 随机生成字符串
+function randomString() {
+  return Math.random().toString(36).slice(2)
+}
+
+const historyList = ref([] as IHistory[])
 
 const board = ref(getInitBoard())
 
@@ -39,9 +45,10 @@ function makeMove(index: number) {
   // 切换玩家
   else {
     currentPlayer.value = currentPlayer.value === 'X' ? 'O' : 'X'
-    historyList.push({
+    historyList.value.push({
       board: board.value.slice(),
       currentPlayer: currentPlayer.value,
+      uid: randomString(),
     })
   }
 }
@@ -49,6 +56,15 @@ function resetBoard() {
   board.value = getInitBoard()
   currentPlayer.value = 'X'
   message.value = ''
+}
+
+function goToStep(index: number) {
+  const { board: newBoard, currentPlayer: newCurrentPlayer } =
+    historyList.value[index]
+  board.value = newBoard
+  currentPlayer.value = newCurrentPlayer
+  message.value = ''
+  historyList.value = historyList.value.slice(0, index + 1)
 }
 
 function checkWin() {
@@ -74,22 +90,33 @@ function checkWin() {
 </script>
 
 <template>
-  <div class="flex w-full justify-center items-center">
-    <div class="flex flex-col justify-center items-center">
-      <h1 class="py-4">{{ message || `当前该${currentPlayer}走` }}</h1>
-      <div class="board">
-        <div
-          v-for="(cell, index) in board"
-          :key="index"
-          @click="makeMove(index)"
-        >
-          {{ cell }}
+  <div>
+    <h1 class="py-4 text-center">
+      {{ message || `当前该${currentPlayer}走` }}
+    </h1>
+    <div class="flex w-full justify-center">
+      <div class="flex flex-col justify-center items-center">
+        <div class="board">
+          <div
+            v-for="(cell, index) in board"
+            :key="index"
+            @click="makeMove(index)"
+          >
+            {{ cell }}
+          </div>
         </div>
+        <button class="pt-4" @click="resetBoard">Reset</button>
       </div>
-      <button class="pt-4" @click="resetBoard">Reset</button>
-    </div>
-    <div class="ml-4">
-      <button v-for="item in historyList"></button>
+      <div class="flex items-start flex-col ml-4 w-60">
+        <button
+          class="mt-1 p-2 button"
+          :key="item.uid"
+          @click="goToStep(index)"
+          v-for="(item, index) in historyList"
+        >
+          go to step{{ index + 1 }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -110,5 +137,16 @@ function checkWin() {
   border: 1px solid #ccc;
   cursor: pointer;
   font-size: 24px;
+}
+.button {
+  border: 1px solid rgb(173, 172, 172);
+  cursor: pointer;
+  font-size: 14px;
+  border-radius: 10px;
+  transition: all 0.2s;
+}
+.button:hover {
+  background-color: rgb(173, 172, 172);
+  color: white;
 }
 </style>
