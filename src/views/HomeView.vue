@@ -2,14 +2,14 @@
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const list = [
-  {
-    label: '钓鱼',
-    path: '/fishing'
-  },
-  {
-    label: '消消乐',
-    path: '/anipop'
-  },
+  // {
+  //   label: '钓鱼',
+  //   path: '/fishing'
+  // },
+  // {
+  //   label: '消消乐',
+  //   path: '/anipop'
+  // },
   {
     label: '贪吃蛇',
     path: '/snake'
