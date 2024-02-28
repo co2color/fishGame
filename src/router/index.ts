@@ -31,7 +31,7 @@ const router = createRouter({
     {
       path: '/tictactoe',
       name: 'tictactoe',
-      component: () => import('@/views/tictactoe/tictactoe.vue')
+      component: () => import('@/views/tictactoe/Tictactoe.vue')
     }
   ]
 })
