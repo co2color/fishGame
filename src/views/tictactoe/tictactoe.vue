@@ -6,9 +6,9 @@ function getInitBoard() {
 }
 
 interface IHistory {
-  board: string[]
-  currentPlayer: string
-  uid: string
+  board: string[];
+  currentPlayer: string;
+  uid: string;
 }
 
 // 随机生成字符串

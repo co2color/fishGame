@@ -6,36 +6,36 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('@/views/HomeView.vue')
+      component: () => import('@/views/HomeView.vue'),
     },
     {
       path: '/anipop',
       name: 'anipop',
-      component: () => import('@/views/anipop/anipop.vue')
+      component: () => import('@/views/anipop/anipop.vue'),
     },
     {
       path: '/fishing',
       name: 'fishing',
-      component: () => import('@/views/fishing/fishing.vue')
+      component: () => import('@/views/fishing/fishing.vue'),
     },
     {
       path: '/snake',
       name: 'snake',
-      component: () => import('@/views/snake/snake.vue')
+      component: () => import('@/views/snake/snake.vue'),
     },
     {
       path: '/2048',
       name: '2048',
-      component: () => import('@/views/2048/2048.vue')
+      component: () => import('@/views/2048/2048.vue'),
     },
     {
       path: '/tictactoe',
       name: 'tictactoe',
-      component: () => import('@/views/tictactoe/tictactoe.vue')
-    }
-  ]
+      component: () => import('@/views/tictactoe/tictactoe.vue'),
+    },
+  ],
 })
-router.beforeEach(to => {
+router.beforeEach((to) => {
   document.title = String(to.name)
 })
 
