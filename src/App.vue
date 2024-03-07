@@ -7,10 +7,11 @@
 <style>
 @import '@/assets/base.css';
 
-* {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -o-user-select: none;
-  user-select: none;
+html,
+body,
+#app {
+  height: 100%;
+  padding: 0;
+  margin: 0;
 }
 </style>
