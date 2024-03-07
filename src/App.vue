@@ -6,6 +6,7 @@
 
 <style>
 @import '@/assets/base.css';
+
 * {
   -webkit-user-select: none;
   -moz-user-select: none;
