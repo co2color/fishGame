@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
-const router = useRouter()
 
+const router = useRouter()
 
 const list = [
   // {
@@ -14,29 +14,30 @@ const list = [
   // },
   {
     label: '贪吃蛇',
-    path: '/snake'
+    path: '/snake',
   },
   {
     label: '2048',
-    path: '/2048'
+    path: '/2048',
   },
   {
     label: 'tictactoe',
-    path: '/tictactoe'
-  }
+    path: '/tictactoe',
+  },
+  {
+    label: 'sokoban',
+    path: '/sokoban',
+  },
 ]
-const to = (path: string) => {
+function to(path: string) {
   router.push(path)
 }
 </script>
 
 <template>
-  <ul class="bg-bubbles">
-    <li v-for="i in 10"></li>
-  </ul>
   <div class="hv flex flex-col justify-center items-center">
     <main class="flex flex-wrap justify-between items-center">
-      <div class="text-center rounded-xl py-3 m-4" v-for="item in list" :key="item.path" @click="to(item.path)">
+      <div v-for="item in list" :key="item.path" class="text-center rounded-xl py-3 m-4" @click="to(item.path)">
         {{ item.label }}
       </div>
     </main>

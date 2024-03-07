@@ -33,6 +33,11 @@ const router = createRouter({
       name: 'tictactoe',
       component: () => import('@/views/tictactoe/tictactoe.vue'),
     },
+    {
+      path: '/sokoban',
+      name: 'sokoban',
+      component: () => import('@/views/sokoban/sokoban.vue'),
+    },
   ],
 })
 router.beforeEach((to) => {
