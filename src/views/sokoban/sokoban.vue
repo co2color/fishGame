@@ -19,8 +19,7 @@ function resetPlayer() {
   const x = Math.floor(Math.random() * (size - 5) + 2)
   const y = Math.floor(Math.random() * (size - 5) + 2)
   const currentType = mapList.value[x][y].type
-  if (currentType === EmapType.Empty)
-    return { x, y }
+  if (currentType === EmapType.Empty) { return { x, y } }
 
   return resetPlayer()
 }
@@ -39,24 +38,26 @@ function initMap() {
 
 // 上就是y--，下就是y++，左就是x--，右就是x++
 function moveUp() {
-  // 判断是否能往上
   const { x, y } = player.value
-  // 如果上面有球或者墙，就不能往上了
   const currentType = mapList.value[x][y].type
   const topType = mapList.value[x][y - 1].type
-  if (topType !== EmapType.Empty)
-    return
+  if (topType === EmapType.Empty) {
+    player.value = { x, y: y - 1 }
+    mapList.value[x][y].type = EmapType.Empty
+    mapList.value[x][y - 1].type = currentType
+  }
 
-  player.value = { x, y: y - 1 }
-  mapList.value[x][y].type = EmapType.Empty
-  mapList.value[x][y - 1].type = currentType
+  // 如果上面是球，就要判断球的上面是不是空的
+  else if (topType === EmapType.Ball) {
+    const ballTop = mapList.value[x][y - 2].type
+  }
 }
-function moveDown() {}
-function moveLeft() {}
-function moveRight() {}
+function moveDown() { }
+function moveLeft() { }
+function moveRight() { }
 
 function handleKeyUp() {
-// 监听键盘方向4个键
+  // 监听键盘方向4个键
   window.addEventListener('keydown', (e) => {
     switch (e.key) {
       case 'ArrowUp':
