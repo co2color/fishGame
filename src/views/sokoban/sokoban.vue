@@ -1,19 +1,16 @@
 <script lang="ts" setup>
-// 写一个推箱子的游戏
+import { computed, ref } from 'vue'
+import { EmapType } from './types/map'
+import useMapSize from './utils/mapSize'
+
+const map = useMapSize(10)
 
 // 画格子,定义二维数组
-const mapList = [
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-]
+const mapList = ref(map.getMapList())
+
+const computedMapWidth = computed(() => {
+  return `${map.size.value * 40}px`
+})
 </script>
 
 <template>
@@ -24,10 +21,11 @@ const mapList = [
           v-for="(col, colIndex) in row"
           :key="colIndex"
           :class="{
-            'bg-zinc-400': col === 1,
-            'bg-neutral-100': col === 0,
+            'bg-zinc-400': col.type === EmapType.Border,
+            'bg-neutral-100': col.type === EmapType.Content,
           }"
-          class="w-10 h-10 flex"
+
+          class="w-10 h-10 flex items-center justify-center"
         />
       </div>
     </div>
@@ -36,14 +34,12 @@ const mapList = [
 
 <style lang="scss" scoped>
 .box {
-  width: 400px;
-  height: 400px;
+  width: v-bind(computedMapWidth);
+  height: v-bind(computedMapWidth);
+  background-color: red;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
-  font-weight: bold;
   transition: all 0.3s;
-
 }
 </style>
