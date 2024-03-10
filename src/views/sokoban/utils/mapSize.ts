@@ -7,23 +7,25 @@ export default function useMapSize(len: number) {
   const setSize = (_size: number) => {
     size.value = _size
   }
-  const getMapList = () => {
+
+  const resetMapList = () => {
     const map: IMapItemContent[][] = []
     for (let i = 0; i < size.value; i++) {
       const row: IMapItemContent[] = []
       for (let j = 0; j < size.value; j++) {
         if (i === 0 || i === size.value - 1 || j === 0 || j === size.value - 1)
-          row.push({ x: i, y: j, type: EmapType.Border })
+          row.push({ y: i, x: j, type: EmapType.Border })
         else
-          row.push({ x: i, y: j, type: EmapType.Empty })
+          row.push({ y: i, x: j, type: EmapType.Empty })
       }
       map.push(row)
     }
     return map
   }
+
   return {
     size,
     setSize,
-    getMapList,
+    resetMapList,
   }
 }

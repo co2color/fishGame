@@ -1,8 +1,8 @@
 export enum EmapType {
-  Border,
-  Box,
-  Player,
-  Empty,
+  Border = 'Border',
+  Ball = 'Ball',
+  Player = 'Player',
+  Empty = 'Empty',
 }
 
 export interface IMapItemContent {

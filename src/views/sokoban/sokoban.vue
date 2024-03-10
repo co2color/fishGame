@@ -1,20 +1,23 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
+import { cloneDeep } from 'lodash-es'
 import { EmapType } from './types/map'
 import useMapSize from './utils/mapSize'
 
 const map = useMapSize(10)
 
-const mapList = ref(map.getMapList())
+const mapList = ref(map.resetMapList())
 
 const computedMapWidth = computed(() => {
   return `${map.size.value * 40}px`
 })
 
 function resetPlayer() {
-  // 生成玩家或球的位置
-  const x = Math.floor(Math.random() * (map.size.value - 2)) + 1
-  const y = Math.floor(Math.random() * (map.size.value - 2)) + 1
+  const size = map.size.value
+  // 球必须从(2,2)开始，到(size-3，size-3)结束（球如果挨着墙的话，就不好推了）
+  // 玩家其实可以挨着墙，但不管了，懒得额外判断了
+  const x = Math.floor(Math.random() * (size - 5) + 2)
+  const y = Math.floor(Math.random() * (size - 5) + 2)
   const currentType = mapList.value[x][y].type
   if (currentType === EmapType.Empty)
     return { x, y }
@@ -22,32 +25,83 @@ function resetPlayer() {
   return resetPlayer()
 }
 
+const player = ref(resetPlayer())
+const ball = ref(resetPlayer())
+
 function initMap() {
-  const { x, y } = resetPlayer()
+  player.value = resetPlayer()
+  const { x, y } = player.value
   mapList.value[x][y].type = EmapType.Player
-  const { x: bx, y: by } = resetPlayer()
-  mapList.value[bx][by].type = EmapType.Box
+  ball.value = resetPlayer()
+  const { x: bx, y: by } = ball.value
+  mapList.value[bx][by].type = EmapType.Ball
+}
+
+// 上就是y--，下就是y++，左就是x--，右就是x++
+function moveUp() {
+  // 判断是否能往上
+  const { x, y } = player.value
+  // 如果上面有球或者墙，就不能往上了
+  const currentType = mapList.value[x][y].type
+  const topType = mapList.value[x][y - 1].type
+  if (topType !== EmapType.Empty)
+    return
+
+  player.value = { x, y: y - 1 }
+  mapList.value[x][y].type = EmapType.Empty
+  mapList.value[x][y - 1].type = currentType
+}
+function moveDown() {}
+function moveLeft() {}
+function moveRight() {}
+
+function handleKeyUp() {
+// 监听键盘方向4个键
+  window.addEventListener('keydown', (e) => {
+    switch (e.key) {
+      case 'ArrowUp':
+        moveUp()
+        break
+      case 'ArrowDown':
+        moveDown()
+        break
+      case 'ArrowLeft':
+        moveLeft()
+        break
+      case 'ArrowRight':
+        moveRight()
+        break
+    }
+    return 1
+  })
 }
 
 onMounted(() => {
   initMap()
+  handleKeyUp()
 })
 </script>
 
 <template>
   <div class="w-full h-full flex items-center justify-center">
-    <div class="container border flex flex-wrap">
-      <div v-for="(row, rowIndex) in mapList" :key="rowIndex" class="flex">
+    <div class="container border flex ">
+      <div v-for="(row, rowIndex) in mapList" :key="rowIndex" class="flex flex-wrap">
         <div
           v-for="(col, colIndex) in row" :key="colIndex" :class="{
-            'bg-neutral-100': col.type === EmapType.Box,
+            'bg-neutral-100': col.type === EmapType.Ball,
             'bg-zinc-400': col.type === EmapType.Border,
           }" class="flex items-center justify-center w-10 h-10"
         >
-          <div v-if="col.type === EmapType.Border" />
-          <div v-else-if="col.type === EmapType.Empty" />
-          <div v-else-if="col.type === EmapType.Player" class="player" />
-          <div v-else-if="col.type === EmapType.Box" class="box" />
+          <div v-if="col.type === EmapType.Border">
+            {{ col.x }},{{ col.y }}
+          </div>
+          <div v-else-if="col.type === EmapType.Empty">
+            {{ col.x }},{{ col.y }}
+          </div>
+          <div v-else-if="col.type === EmapType.Player" class="player">
+            人
+          </div>
+          <div v-else-if="col.type === EmapType.Ball" class="box" />
         </div>
       </div>
     </div>
@@ -77,11 +131,12 @@ onMounted(() => {
   font-size: 12px;
   font-weight: bold;
   transition: all 0.3s;
+  transform: scale(0.8);
 }
 
 // 球
 .box {
-  background-color: #f00;
+  background-color: pink;
   color: #fff;
   border-radius: 50%;
   width: 20px;
@@ -90,7 +145,6 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   font-size: 12px;
-  font-weight: bold;
   transition: all 0.3s;
 }
 </style>
