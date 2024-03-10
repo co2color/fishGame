@@ -1,6 +1,8 @@
 export enum EmapType {
   Border,
-  Content,
+  Box,
+  Player,
+  Empty,
 }
 
 export interface IMapItemContent {

@@ -15,7 +15,7 @@ export default function useMapSize(len: number) {
         if (i === 0 || i === size.value - 1 || j === 0 || j === size.value - 1)
           row.push({ x: i, y: j, type: EmapType.Border })
         else
-          row.push({ x: i, y: j, type: EmapType.Content })
+          row.push({ x: i, y: j, type: EmapType.Empty })
       }
       map.push(row)
     }
