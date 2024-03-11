@@ -84,8 +84,46 @@ function moveDown() {
     }
   }
 }
-function moveLeft() { }
-function moveRight() { }
+function moveLeft() {
+  const { x, y } = player.value
+  const currentType = mapList.value[x][y].type
+  const leftType = mapList.value[x - 1][y].type
+  if (leftType === EmapType.Empty) {
+    player.value = { x: x - 1, y }
+    mapList.value[x][y].type = EmapType.Empty
+    mapList.value[x - 1][y].type = currentType
+  }
+  else if (leftType === EmapType.Ball) {
+    const ballLeft = mapList.value[x - 2][y].type
+    if (ballLeft === EmapType.Empty) {
+      player.value = { x: x - 1, y }
+      ball.value = { x: x - 2, y }
+      mapList.value[x][y].type = EmapType.Empty
+      mapList.value[x - 1][y].type = currentType
+      mapList.value[x - 2][y].type = EmapType.Ball
+    }
+  }
+}
+function moveRight() {
+  const { x, y } = player.value
+  const currentType = mapList.value[x][y].type
+  const rightType = mapList.value[x + 1][y].type
+  if (rightType === EmapType.Empty) {
+    player.value = { x: x + 1, y }
+    mapList.value[x][y].type = EmapType.Empty
+    mapList.value[x + 1][y].type = currentType
+  }
+  else if (rightType === EmapType.Ball) {
+    const ballRight = mapList.value[x + 2][y].type
+    if (ballRight === EmapType.Empty) {
+      player.value = { x: x + 1, y }
+      ball.value = { x: x + 2, y }
+      mapList.value[x][y].type = EmapType.Empty
+      mapList.value[x + 1][y].type = currentType
+      mapList.value[x + 2][y].type = EmapType.Ball
+    }
+  }
+}
 
 function handleKeyUp() {
   // 监听键盘方向4个键
