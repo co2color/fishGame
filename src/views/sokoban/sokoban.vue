@@ -32,7 +32,16 @@ function getPlayerPosition() {
   return resetPosition(1, map.size.value - 2)
 }
 function getBallPosition() {
-  return resetPosition(2, map.size.value - 3)
+  const { x, y } = resetPosition(2, map.size.value - 3)
+  // 如果生成的球的上下左右四个位置存在边界，就重新生成
+  const top = mapList.value[x][y - 1].type
+  const bottom = mapList.value[x][y + 1].type
+  const left = mapList.value[x - 1][y].type
+  const right = mapList.value[x + 1][y].type
+  if (top === EmapType.Border || bottom === EmapType.Border || left === EmapType.Border || right === EmapType.Border) {
+    return getBallPosition()
+  }
+  return { x, y }
 }
 function getTargetPosition() {
   return resetPosition(1, map.size.value - 2)
