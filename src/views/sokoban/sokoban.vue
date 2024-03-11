@@ -28,40 +28,44 @@ function resetPosition(left: number, right: number) {
   return resetPosition(left, size - right)
 }
 
-function resetPlayer() {
+function getPlayerPosition() {
   return resetPosition(1, map.size.value - 2)
 }
-function resetBall() {
+function getBallPosition() {
   return resetPosition(2, map.size.value - 3)
 }
-function resetTarget() {
+function getTargetPosition() {
   return resetPosition(1, map.size.value - 2)
 }
 
-const player = ref(resetPlayer())
-const ball = ref(resetBall())
-const target = ref(resetTarget())
+const player = ref(getPlayerPosition())
+const ball = ref(getBallPosition())
+const target = ref(getTargetPosition())
 
 function initMap() {
-  player.value = resetPlayer()
+  mapList.value = cloneDeep(map.resetMapList())
+  player.value = getPlayerPosition()
   const { x, y } = player.value
   mapList.value[x][y].type = EmapType.Player
-  ball.value = resetBall()
+  ball.value = getBallPosition()
   const { x: bx, y: by } = ball.value
   mapList.value[bx][by].type = EmapType.Ball
-  target.value = resetTarget()
+  target.value = getTargetPosition()
   const { x: tx, y: ty } = target.value
   mapList.value[tx][ty].type = EmapType.Target
 }
-
+const isWin = ref(false)
 function win() {
   const { x, y } = ball.value
   const { x: tx, y: ty } = target.value
-  const isWin = (x === tx && y === ty)
-  if (isWin) {
-    // eslint-disable-next-line no-alert
-    alert('恭喜你，通关了！')
-    initMap()
+  isWin.value = (x === tx && y === ty)
+}
+
+function setTargetPosition() {
+  // 如果target上面是空的，就把该位置变成target
+  const { x: tx, y: ty } = target.value
+  if (mapList.value[tx][ty].type === EmapType.Empty) {
+    mapList.value[tx][ty].type = EmapType.Target
   }
 }
 
@@ -69,26 +73,35 @@ function win() {
 function moveUp() {
   const { x, y } = player.value
   const currentType = mapList.value[x][y].type
-  const topType = mapList.value[x][y - 1].type
+  const playerTopType = mapList.value[x][y - 1].type
+  const ballTopType = mapList.value[x][y - 2].type // 球的上面
   // 能往上的条件有两个：1是上面是空的，2是上面有球且球的上面是空的
-  if (topType === EmapType.Empty) {
+  if (playerTopType === EmapType.Empty || playerTopType === EmapType.Target) {
     player.value = { x, y: y - 1 }
     mapList.value[x][y].type = EmapType.Empty
     mapList.value[x][y - 1].type = currentType
   }
 
   // 如果上面是球，就要判断球的上面是不是空的
-  else if (topType === EmapType.Ball) {
-    const ballTop = mapList.value[x][y - 2].type // 球的上面
+  else if (playerTopType === EmapType.Ball) {
     // 如果球的上面是空的，就可以推，将玩家和球都往上移动
-    if (ballTop === EmapType.Empty) {
+    if (ballTopType === EmapType.Empty) {
       player.value = { x, y: y - 1 } // 玩家往上走
       ball.value = { x, y: y - 2 } // 球往上走
       mapList.value[x][y].type = EmapType.Empty // 玩家原来的位置变成空
       mapList.value[x][y - 1].type = currentType // 球原来的位置变成玩家
       mapList.value[x][y - 2].type = EmapType.Ball // 球的上面变成球
     }
+    else if (ballTopType === EmapType.Target) {
+      player.value = { x, y: y - 1 }
+      ball.value = { x, y: y - 2 }
+      mapList.value[x][y].type = EmapType.Empty
+      mapList.value[x][y - 1].type = currentType
+      mapList.value[x][y - 2].type = EmapType.Ball
+    }
   }
+  setTargetPosition()
+
   win()
 }
 
@@ -98,7 +111,7 @@ function moveDown() {
   const currentType = mapList.value[x][y].type
   // 下面是空的，就往下走
   const bottomType = mapList.value[x][y + 1].type
-  if (bottomType === EmapType.Empty) {
+  if (bottomType === EmapType.Empty || bottomType === EmapType.Target) {
     player.value = { x, y: y + 1 }
     mapList.value[x][y].type = EmapType.Empty
     mapList.value[x][y + 1].type = currentType
@@ -113,13 +126,14 @@ function moveDown() {
       mapList.value[x][y + 2].type = EmapType.Ball
     }
   }
+  setTargetPosition()
   win()
 }
 function moveLeft() {
   const { x, y } = player.value
   const currentType = mapList.value[x][y].type
   const leftType = mapList.value[x - 1][y].type
-  if (leftType === EmapType.Empty) {
+  if (leftType === EmapType.Empty || leftType === EmapType.Target) {
     player.value = { x: x - 1, y }
     mapList.value[x][y].type = EmapType.Empty
     mapList.value[x - 1][y].type = currentType
@@ -134,13 +148,14 @@ function moveLeft() {
       mapList.value[x - 2][y].type = EmapType.Ball
     }
   }
+  setTargetPosition()
   win()
 }
 function moveRight() {
   const { x, y } = player.value
   const currentType = mapList.value[x][y].type
   const rightType = mapList.value[x + 1][y].type
-  if (rightType === EmapType.Empty) {
+  if (rightType === EmapType.Empty || rightType === EmapType.Target) {
     player.value = { x: x + 1, y }
     mapList.value[x][y].type = EmapType.Empty
     mapList.value[x + 1][y].type = currentType
@@ -155,6 +170,7 @@ function moveRight() {
       mapList.value[x + 2][y].type = EmapType.Ball
     }
   }
+  setTargetPosition()
   win()
 }
 
@@ -195,8 +211,12 @@ onMounted(() => {
             'bg-zinc-400': col.type === EmapType.Border,
           }" class="flex items-center justify-center w-10 h-10"
         >
-          <div v-if="col.type === EmapType.Border" />
-          <div v-else-if="col.type === EmapType.Empty" />
+          <div v-if="col.type === EmapType.Border">
+            b
+          </div>
+          <div v-else-if="col.type === EmapType.Empty">
+            e
+          </div>
           <div v-else-if="col.type === EmapType.Player" class="player">
             人
           </div>
