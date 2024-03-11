@@ -32,7 +32,16 @@ function getPlayerPosition() {
   return resetPosition(1, map.size.value - 2)
 }
 function getBallPosition() {
-  return resetPosition(2, map.size.value - 3)
+  const { x, y } = resetPosition(2, map.size.value - 3)
+  // 如果生成的球的上下左右四个位置存在边界，就重新生成
+  const top = mapList.value[x][y - 1].type
+  const bottom = mapList.value[x][y + 1].type
+  const left = mapList.value[x - 1][y].type
+  const right = mapList.value[x + 1][y].type
+  if (top === EmapType.Border || bottom === EmapType.Border || left === EmapType.Border || right === EmapType.Border) {
+    return getBallPosition()
+  }
+  return { x, y }
 }
 function getTargetPosition() {
   return resetPosition(1, map.size.value - 2)
@@ -62,7 +71,8 @@ function win() {
 }
 
 function setTargetPosition() {
-  // 如果target上面是空的，就把该位置变成target
+  // 为球推到target上面的时候，target的type就是球了。
+  // 而此时如果球被推走了，target原本位置的type就再也不是Target了，所以需要重新设置回来
   const { x: tx, y: ty } = target.value
   if (mapList.value[tx][ty].type === EmapType.Empty) {
     mapList.value[tx][ty].type = EmapType.Target
@@ -85,19 +95,12 @@ function moveUp() {
   // 如果上面是球，就要判断球的上面是不是空的
   else if (playerTopType === EmapType.Ball) {
     // 如果球的上面是空的，就可以推，将玩家和球都往上移动
-    if (ballTopType === EmapType.Empty) {
+    if (ballTopType === EmapType.Empty || ballTopType === EmapType.Target) {
       player.value = { x, y: y - 1 } // 玩家往上走
       ball.value = { x, y: y - 2 } // 球往上走
       mapList.value[x][y].type = EmapType.Empty // 玩家原来的位置变成空
       mapList.value[x][y - 1].type = currentType // 球原来的位置变成玩家
       mapList.value[x][y - 2].type = EmapType.Ball // 球的上面变成球
-    }
-    else if (ballTopType === EmapType.Target) {
-      player.value = { x, y: y - 1 }
-      ball.value = { x, y: y - 2 }
-      mapList.value[x][y].type = EmapType.Empty
-      mapList.value[x][y - 1].type = currentType
-      mapList.value[x][y - 2].type = EmapType.Ball
     }
   }
   setTargetPosition()
@@ -118,7 +121,7 @@ function moveDown() {
   }
   else if (bottomType === EmapType.Ball) {
     const ballBottom = mapList.value[x][y + 2].type
-    if (ballBottom === EmapType.Empty) {
+    if (ballBottom === EmapType.Empty || ballBottom === EmapType.Target) {
       player.value = { x, y: y + 1 }
       ball.value = { x, y: y + 2 }
       mapList.value[x][y].type = EmapType.Empty
@@ -140,7 +143,7 @@ function moveLeft() {
   }
   else if (leftType === EmapType.Ball) {
     const ballLeft = mapList.value[x - 2][y].type
-    if (ballLeft === EmapType.Empty) {
+    if (ballLeft === EmapType.Empty || ballLeft === EmapType.Target) {
       player.value = { x: x - 1, y }
       ball.value = { x: x - 2, y }
       mapList.value[x][y].type = EmapType.Empty
@@ -162,7 +165,7 @@ function moveRight() {
   }
   else if (rightType === EmapType.Ball) {
     const ballRight = mapList.value[x + 2][y].type
-    if (ballRight === EmapType.Empty) {
+    if (ballRight === EmapType.Empty || ballRight === EmapType.Target) {
       player.value = { x: x + 1, y }
       ball.value = { x: x + 2, y }
       mapList.value[x][y].type = EmapType.Empty
@@ -202,7 +205,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="w-full h-full flex items-center justify-center">
+  <div class="w-full h-full flex flex-col items-center justify-center">
     <div class="container border flex ">
       <div v-for="(row, rowIndex) in mapList" :key="rowIndex" class="flex flex-wrap">
         <div
@@ -211,12 +214,8 @@ onMounted(() => {
             'bg-zinc-400': col.type === EmapType.Border,
           }" class="flex items-center justify-center w-10 h-10"
         >
-          <div v-if="col.type === EmapType.Border">
-            b
-          </div>
-          <div v-else-if="col.type === EmapType.Empty">
-            e
-          </div>
+          <div v-if="col.type === EmapType.Border" />
+          <div v-else-if="col.type === EmapType.Empty" />
           <div v-else-if="col.type === EmapType.Player" class="player">
             人
           </div>
@@ -227,6 +226,11 @@ onMounted(() => {
         </div>
       </div>
     </div>
+    <div class="h-3">
+      <button v-if="isWin">
+        下一关
+      </button>
+    </div>
   </div>
 </template>
 
@@ -234,7 +238,6 @@ onMounted(() => {
 .container {
   width: v-bind(computedMapWidth);
   height: v-bind(computedMapWidth);
-  // background-color: red;
   display: flex;
   align-items: center;
   justify-content: center;
