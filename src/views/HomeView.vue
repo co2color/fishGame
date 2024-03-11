@@ -24,10 +24,10 @@ const list = [
     label: 'tictactoe',
     path: '/tictactoe',
   },
-  // {
-  //   label: 'sokoban',
-  //   path: '/sokoban',
-  // },
+  {
+    label: 'sokoban',
+    path: '/sokoban',
+  },
 ]
 function to(path: string) {
   router.push(path)
