@@ -71,7 +71,8 @@ function win() {
 }
 
 function setTargetPosition() {
-  // 如果target上面是空的，就把该位置变成target
+  // 为球推到target上面的时候，target的type就是球了。
+  // 而此时如果球被推走了，target原本位置的type就再也不是Target了，所以需要重新设置回来
   const { x: tx, y: ty } = target.value
   if (mapList.value[tx][ty].type === EmapType.Empty) {
     mapList.value[tx][ty].type = EmapType.Target
