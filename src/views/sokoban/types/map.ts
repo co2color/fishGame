@@ -3,6 +3,7 @@ export enum EmapType {
   Ball = 'Ball',
   Player = 'Player',
   Empty = 'Empty',
+  Target = 'Target',
 }
 
 export interface IMapItemContent {

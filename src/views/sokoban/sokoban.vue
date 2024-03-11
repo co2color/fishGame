@@ -12,28 +12,57 @@ const computedMapWidth = computed(() => {
   return `${map.size.value * 40}px`
 })
 
-function resetPlayer() {
-  const size = map.size.value
-  // 球必须从(2,2)开始，到(size-3，size-3)结束（球如果挨着墙的话，就不好推了）
-  // 玩家其实可以挨着墙，但不管了，懒得额外判断了
-  const x = Math.floor(Math.random() * (size - 5) + 2)
-  const y = Math.floor(Math.random() * (size - 5) + 2)
-  const currentType = mapList.value[x][y].type
-  if (currentType === EmapType.Empty) { return { x, y } }
+// 生成a-b的随机整数,包含a和b
+function randomBetween(a: number, b: number) {
+  return Math.floor(Math.random() * (b - a + 1) + a)
+}
 
-  return resetPlayer()
+function resetPosition(left: number, right: number) {
+  const size = map.size.value
+  const x = randomBetween(left, right)
+  const y = randomBetween(left, right)
+  const currentType = mapList.value[x][y].type
+  if (currentType === EmapType.Empty) {
+    return { x, y }
+  }
+  return resetPosition(left, size - right)
+}
+
+function resetPlayer() {
+  return resetPosition(1, map.size.value - 2)
+}
+function resetBall() {
+  return resetPosition(2, map.size.value - 3)
+}
+function resetTarget() {
+  return resetPosition(1, map.size.value - 2)
 }
 
 const player = ref(resetPlayer())
-const ball = ref(resetPlayer())
+const ball = ref(resetBall())
+const target = ref(resetTarget())
 
 function initMap() {
   player.value = resetPlayer()
   const { x, y } = player.value
   mapList.value[x][y].type = EmapType.Player
-  ball.value = resetPlayer()
+  ball.value = resetBall()
   const { x: bx, y: by } = ball.value
   mapList.value[bx][by].type = EmapType.Ball
+  target.value = resetTarget()
+  const { x: tx, y: ty } = target.value
+  mapList.value[tx][ty].type = EmapType.Target
+}
+
+function win() {
+  const { x, y } = ball.value
+  const { x: tx, y: ty } = target.value
+  const isWin = (x === tx && y === ty)
+  if (isWin) {
+    // eslint-disable-next-line no-alert
+    alert('恭喜你，通关了！')
+    initMap()
+  }
 }
 
 // 往上，x不动，y--
@@ -60,6 +89,7 @@ function moveUp() {
       mapList.value[x][y - 2].type = EmapType.Ball // 球的上面变成球
     }
   }
+  win()
 }
 
 // 往下，x不动，y++
@@ -83,6 +113,7 @@ function moveDown() {
       mapList.value[x][y + 2].type = EmapType.Ball
     }
   }
+  win()
 }
 function moveLeft() {
   const { x, y } = player.value
@@ -103,6 +134,7 @@ function moveLeft() {
       mapList.value[x - 2][y].type = EmapType.Ball
     }
   }
+  win()
 }
 function moveRight() {
   const { x, y } = player.value
@@ -123,6 +155,7 @@ function moveRight() {
       mapList.value[x + 2][y].type = EmapType.Ball
     }
   }
+  win()
 }
 
 function handleKeyUp() {
@@ -162,16 +195,15 @@ onMounted(() => {
             'bg-zinc-400': col.type === EmapType.Border,
           }" class="flex items-center justify-center w-10 h-10"
         >
-          <div v-if="col.type === EmapType.Border">
-            {{ col.x }},{{ col.y }}
-          </div>
-          <div v-else-if="col.type === EmapType.Empty">
-            {{ col.x }},{{ col.y }}
-          </div>
+          <div v-if="col.type === EmapType.Border" />
+          <div v-else-if="col.type === EmapType.Empty" />
           <div v-else-if="col.type === EmapType.Player" class="player">
             人
           </div>
           <div v-else-if="col.type === EmapType.Ball" class="box" />
+          <div v-else-if="col.type === EmapType.Target" class="target">
+            T
+          </div>
         </div>
       </div>
     </div>
@@ -207,6 +239,19 @@ onMounted(() => {
 // 球
 .box {
   background-color: pink;
+  color: #fff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  transition: all 0.3s;
+}
+
+.target {
+  background-color: skyblue;
   color: #fff;
   border-radius: 50%;
   width: 20px;
