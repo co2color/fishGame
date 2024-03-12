@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue'
-import { cloneDeep } from 'lodash-es'
+import { cloneDeep, random } from 'lodash-es'
 import { EmapType } from './types/map'
 import useMapSize from './utils/mapSize'
 
@@ -14,7 +14,7 @@ const computedMapWidth = computed(() => {
 
 // 生成a-b的随机整数,包含a和b
 function randomBetween(a: number, b: number) {
-  return Math.floor(Math.random() * (b - a + 1) + a)
+  return random(a, b)
 }
 
 function resetPosition(left: number, right: number) {
