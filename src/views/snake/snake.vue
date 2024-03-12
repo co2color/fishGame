@@ -1,60 +1,64 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { cloneDeep } from 'lodash-es'
+
 const canvas = ref<HTMLCanvasElement | null>(null)
 const context = ref<CanvasRenderingContext2D | null>(null)
 const btn = ref<HTMLButtonElement | null>(null)
-const WIDTH = 500,
-  HEIGHT = 500,
-  SIZE = 10
+const WIDTH = 500
+const HEIGHT = 500
+const SIZE = 10
 const foodCanInBorder = ref(false)
 const initSnakeList = [
   { x: 30, y: 25 },
   { x: 31, y: 25 },
-  { x: 32, y: 25 }
+  { x: 32, y: 25 },
 ]
 let t = 0
 const snakeList = ref(cloneDeep(initSnakeList))
 const currentLocation = ref('KeyA')
-const canvasInit = () => {
+function canvasInit() {
   canvas.value!.width = WIDTH
   canvas.value!.height = HEIGHT
   context.value = canvas.value!.getContext('2d')
 }
-const renderItem = (color: string, x: number, y: number) => {
+function renderItem(color: string, x: number, y: number) {
   context.value!.fillStyle = color
   context.value!.fillRect(x * SIZE, y * SIZE, SIZE, SIZE)
 }
-const getRandomFoodLocation = (_foodCanInBorder: Boolean = false) => {
-  let x = Math.floor((Math.random() * WIDTH) / SIZE),
-    y = Math.floor((Math.random() * HEIGHT) / SIZE)
+function getRandomFoodLocation(_foodCanInBorder: boolean = false) {
+  let x = Math.floor((Math.random() * WIDTH) / SIZE)
+  let y = Math.floor((Math.random() * HEIGHT) / SIZE)
   if (_foodCanInBorder) {
     return { x, y }
   }
   if (x === 0) {
     x += 1
-  } else if (y === 0) {
+  }
+  else if (y === 0) {
     y += 1
-  } else if (x === WIDTH / SIZE - 1) {
+  }
+  else if (x === WIDTH / SIZE - 1) {
     x -= 1
-  } else if (y === HEIGHT / SIZE - 1) {
+  }
+  else if (y === HEIGHT / SIZE - 1) {
     y -= 1
   }
   return { x, y }
 }
 const foodLocation = ref({
   x: getRandomFoodLocation(foodCanInBorder.value).x,
-  y: getRandomFoodLocation(foodCanInBorder.value).y
+  y: getRandomFoodLocation(foodCanInBorder.value).y,
 })
-const renderFood = (color: string = 'skyblue') => {
+function renderFood(color: string = 'skyblue') {
   renderItem(color, foodLocation.value.x, foodLocation.value.y)
 }
-const renderSnake = () => {
-  snakeList.value.forEach(item => {
+function renderSnake() {
+  snakeList.value.forEach((item) => {
     renderItem('pink', item.x, item.y)
   })
 }
-const touchWallWatch = () => {
+function touchWallWatch() {
   const headItem = snakeList.value[0]
   // 有待改进，这个函数应该只用于判断蛇头是否在边界处
   // 然后，蛇头如果再动，才算触碰边界
@@ -63,12 +67,11 @@ const touchWallWatch = () => {
   }
   return false
 }
-const touchCallBack = () => {
-  alert('砰恰拉卡')
-  btn.value!.innerText = 'restart'
+function touchCallBack() {
+  btn.value!.textContent = 'restart'
   removeKeyBoardWatch()
 }
-const moveSnake = () => {
+function moveSnake() {
   if (touchWallWatch()) {
     touchCallBack()
     clearInterval(t)
@@ -77,50 +80,54 @@ const moveSnake = () => {
   if (currentLocation.value === 'KeyW') {
     snakeList.value.unshift({
       x: snakeList.value[0].x,
-      y: snakeList.value[0].y - 1
+      y: snakeList.value[0].y - 1,
     })
-  } else if (currentLocation.value === 'KeyA') {
+  }
+  else if (currentLocation.value === 'KeyA') {
     snakeList.value.unshift({
       x: snakeList.value[0].x - 1,
-      y: snakeList.value[0].y
+      y: snakeList.value[0].y,
     })
-  } else if (currentLocation.value === 'KeyS') {
+  }
+  else if (currentLocation.value === 'KeyS') {
     snakeList.value.unshift({
       x: snakeList.value[0].x,
-      y: snakeList.value[0].y + 1
+      y: snakeList.value[0].y + 1,
     })
-  } else if (currentLocation.value === 'KeyD') {
+  }
+  else if (currentLocation.value === 'KeyD') {
     snakeList.value.unshift({
       x: snakeList.value[0].x + 1,
-      y: snakeList.value[0].y
+      y: snakeList.value[0].y,
     })
   }
   if (isEatFood()) {
     resetFood()
-  } else {
+  }
+  else {
     snakeList.value.pop()
   }
 }
-const isEatFood = () => {
+function isEatFood() {
   const headItem = snakeList.value[0]
   if (headItem.x === foodLocation.value.x && headItem.y === foodLocation.value.y) {
     return true
   }
   return false
 }
-const resetFood = () => {
+function resetFood() {
   const { x, y } = getRandomFoodLocation(foodCanInBorder.value)
   foodLocation.value = { x, y }
   renderFood()
 }
 
-const restartGame = () => {
+function restartGame() {
   snakeList.value = cloneDeep(initSnakeList)
   renderSnake()
   currentLocation.value = 'KeyA'
   clearInterval(t)
 }
-const startGame = () => {
+function startGame() {
   restartGame()
   addKeyBoardWatch()
   t = setInterval(() => {
@@ -130,16 +137,24 @@ const startGame = () => {
     moveSnake()
   }, 100)
 }
-const watchKeyCallBack = (event: KeyboardEvent) => {
-  if (event.code === 'KeyW') currentLocation.value = 'KeyW'
-  if (event.code === 'KeyS') currentLocation.value = 'KeyS'
-  if (event.code === 'KeyA') currentLocation.value = 'KeyA'
-  if (event.code === 'KeyD') currentLocation.value = 'KeyD'
+function watchKeyCallBack(event: KeyboardEvent) {
+  if (event.code === 'KeyW') {
+    currentLocation.value = 'KeyW'
+  }
+  if (event.code === 'KeyS') {
+    currentLocation.value = 'KeyS'
+  }
+  if (event.code === 'KeyA') {
+    currentLocation.value = 'KeyA'
+  }
+  if (event.code === 'KeyD') {
+    currentLocation.value = 'KeyD'
+  }
 }
-const addKeyBoardWatch = () => {
+function addKeyBoardWatch() {
   document.addEventListener('keydown', watchKeyCallBack)
 }
-const removeKeyBoardWatch = () => {
+function removeKeyBoardWatch() {
   document.removeEventListener('keydown', watchKeyCallBack)
 }
 onMounted(() => {
@@ -147,13 +162,21 @@ onMounted(() => {
   renderSnake()
   renderFood()
 })
+
+onUnmounted(() => {
+  removeKeyBoardWatch()
+})
 </script>
+
 <template>
   <div class="game flex flex-col justify-center items-center">
-    <button class="mb-1" @click="startGame" ref="btn">start</button>
-    <canvas ref="canvas"></canvas>
+    <button ref="btn" class="mb-1" @click="startGame">
+      start
+    </button>
+    <canvas ref="canvas" />
   </div>
 </template>
+
 <style lang="scss" scoped>
 .game {
   width: 100vw;

@@ -2,13 +2,13 @@
 import { ref } from 'vue'
 
 function getInitBoard() {
-  return new Array(9).fill('')
+  return Array.from({ length: 9 }).fill('') as string[]
 }
 
 interface IHistory {
-  board: string[];
-  currentPlayer: string;
-  uid: string;
+  board: string[]
+  currentPlayer: string
+  uid: string
 }
 
 // 随机生成字符串
@@ -39,7 +39,7 @@ function makeMove(index: number) {
     message.value = `${currentPlayer.value} win!`
   }
   // 如果平局
-  else if (board.value.every((item) => item)) {
+  else if (board.value.every(item => item)) {
     message.value = '平局...'
   }
   // 切换玩家
@@ -60,9 +60,9 @@ function resetBoard() {
 }
 
 function goToStep(uid: string) {
-  const findIndex = historyList.value.findIndex((item) => item.uid === uid)
-  const { board: newBoard, currentPlayer: newCurrentPlayer } =
-    historyList.value[findIndex]
+  const findIndex = historyList.value.findIndex(item => item.uid === uid)
+  const { board: newBoard, currentPlayer: newCurrentPlayer }
+    = historyList.value[findIndex]
   board.value = [...newBoard]
   currentPlayer.value = newCurrentPlayer
   message.value = ''
@@ -83,9 +83,9 @@ function checkWin() {
   return winArr.some((item) => {
     const [a, b, c] = item
     return (
-      board.value[a] &&
-      board.value[a] === board.value[b] &&
-      board.value[a] === board.value[c]
+      board.value[a]
+      && board.value[a] === board.value[b]
+      && board.value[a] === board.value[c]
     )
   })
 }
@@ -107,14 +107,16 @@ function checkWin() {
             {{ cell }}
           </div>
         </div>
-        <button class="pt-4" @click="resetBoard">Reset</button>
+        <button class="pt-4" @click="resetBoard">
+          Reset
+        </button>
       </div>
       <div class="flex items-start flex-col ml-4 w-60">
         <button
-          class="mt-1 p-2 button"
-          :key="item.uid"
-          @click="goToStep(item.uid)"
           v-for="(item, index) in historyList"
+          :key="item.uid"
+          class="mt-1 p-2 button"
+          @click="goToStep(item.uid)"
         >
           go to step {{ index + 1 }}
         </button>

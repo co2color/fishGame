@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue'
-import { cloneDeep } from 'lodash-es'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { cloneDeep, random } from 'lodash-es'
 import { EmapType } from './types/map'
 import useMapSize from './utils/mapSize'
 
@@ -14,7 +14,7 @@ const computedMapWidth = computed(() => {
 
 // 生成a-b的随机整数,包含a和b
 function randomBetween(a: number, b: number) {
-  return Math.floor(Math.random() * (b - a + 1) + a)
+  return random(a, b)
 }
 
 function resetPosition(left: number, right: number) {
@@ -177,26 +177,31 @@ function moveRight() {
   win()
 }
 
-function handleKeyUp() {
-  // 监听键盘方向4个键
-  window.addEventListener('keydown', (e) => {
-    switch (e.key) {
-      case 'ArrowUp':
-        moveUp()
-        break
-      case 'ArrowDown':
-        moveDown()
-        break
-      case 'ArrowLeft':
-        moveLeft()
-        break
-      case 'ArrowRight':
-        moveRight()
-        break
-    }
-    return 1
-  })
+function watchKeyUp(e: KeyboardEvent) {
+  switch (e.key) {
+    case 'ArrowUp':
+      moveUp()
+      break
+    case 'ArrowDown':
+      moveDown()
+      break
+    case 'ArrowLeft':
+      moveLeft()
+      break
+    case 'ArrowRight':
+      moveRight()
+      break
+  }
+  return 1
 }
+
+function handleKeyUp() {
+  window.addEventListener('keydown', watchKeyUp)
+}
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', watchKeyUp)
+})
 
 onMounted(() => {
   initMap()
