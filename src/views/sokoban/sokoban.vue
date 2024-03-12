@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { cloneDeep, random } from 'lodash-es'
 import { EmapType } from './types/map'
 import useMapSize from './utils/mapSize'
@@ -177,26 +177,31 @@ function moveRight() {
   win()
 }
 
-function handleKeyUp() {
-  // 监听键盘方向4个键
-  window.addEventListener('keydown', (e) => {
-    switch (e.key) {
-      case 'ArrowUp':
-        moveUp()
-        break
-      case 'ArrowDown':
-        moveDown()
-        break
-      case 'ArrowLeft':
-        moveLeft()
-        break
-      case 'ArrowRight':
-        moveRight()
-        break
-    }
-    return 1
-  })
+function watchKeyUp(e: KeyboardEvent) {
+  switch (e.key) {
+    case 'ArrowUp':
+      moveUp()
+      break
+    case 'ArrowDown':
+      moveDown()
+      break
+    case 'ArrowLeft':
+      moveLeft()
+      break
+    case 'ArrowRight':
+      moveRight()
+      break
+  }
+  return 1
 }
+
+function handleKeyUp() {
+  window.addEventListener('keydown', watchKeyUp)
+}
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', watchKeyUp)
+})
 
 onMounted(() => {
   initMap()
