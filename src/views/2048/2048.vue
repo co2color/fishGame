@@ -1,28 +1,7 @@
-<template>
-  <div>
-    <div class="title my-2">总分： {{ score }}</div>
-    <div class="game">
-      <!-- 背景布局 -->
-      <div class="game-bg">
-        <div class="item" v-for="i in 16" :key="i"></div>
-      </div>
-
-      <div class="canvas">
-        <NumberBlock
-          v-for="(v, i) in numberList"
-          :key="v.uid"
-          :item="v"
-          @remove="removeNumber(i)"
-        />
-      </div>
-      <h3 class="title mt-4">使用键盘方向键控制</h3>
-    </div>
-  </div>
-</template>
-
 <script lang="ts" setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import NumberBlock from './NumberBlock.vue'
+
 let uid = 0
 
 const grid = [[], [], [], []] as any[]
@@ -55,7 +34,8 @@ function random() {
         if (!grid[i][j]) {
           if (num === 0) {
             return createNumber(i, j)
-          } else {
+          }
+          else {
             num--
           }
         }
@@ -65,7 +45,7 @@ function random() {
 }
 // 创建number
 function createNumber(x: number, y: number) {
-  let number = ref({
+  const number = ref({
     x,
     y,
     number: 1,
@@ -112,8 +92,8 @@ function right() {
 }
 
 function move(x: number, y: number, dir: string) {
-  let self = grid[x][y]
-  if (!self) return
+  const self = grid[x][y]
+  if (!self) { return }
 
   grid[x][y] = undefined
   if (dir === 'up') {
@@ -122,19 +102,22 @@ function move(x: number, y: number, dir: string) {
         break
       }
     }
-  } else if (dir === 'down') {
+  }
+  else if (dir === 'down') {
     while (x++ < 3) {
       if (moveTo(self, x, y) === false) {
         break
       }
     }
-  } else if (dir === 'left') {
+  }
+  else if (dir === 'left') {
     while (y-- > 0) {
       if (moveTo(self, x, y) === false) {
         break
       }
     }
-  } else if (dir === 'right') {
+  }
+  else if (dir === 'right') {
     while (y++ < 3) {
       if (moveTo(self, x, y) === false) {
         break
@@ -159,7 +142,8 @@ function moveTo(self: any, x: number, y: number) {
       _moved = true
     }
     return false
-  } else {
+  }
+  else {
     self.x = x
     self.y = y
     _moved = true
@@ -171,7 +155,8 @@ function update() {
   if (_moved) {
     _moved = false
     random()
-  } else {
+  }
+  else {
     isEnded()
   }
 }
@@ -183,7 +168,7 @@ function isEnded() {
       }
     }
   }
-  alert('您的得分是：' + score.value + '分')
+  alert(`您的得分是：${score.value}分`)
 }
 
 function listener(e: KeyboardEvent) {
@@ -221,6 +206,32 @@ onUnmounted(() => {
   window.removeEventListener('keydown', listener)
 })
 </script>
+
+<template>
+  <div>
+    <div class="title my-2">
+      总分： {{ score }}
+    </div>
+    <div class="game">
+      <!-- 背景布局 -->
+      <div class="game-bg">
+        <div v-for="i in 16" :key="i" class="item" />
+      </div>
+
+      <div class="canvas">
+        <NumberBlock
+          v-for="(v, i) in numberList"
+          :key="v.uid"
+          :item="v"
+          @remove="removeNumber(i)"
+        />
+      </div>
+      <h3 class="title mt-4">
+        使用键盘方向键控制
+      </h3>
+    </div>
+  </div>
+</template>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
