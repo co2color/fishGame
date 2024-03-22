@@ -4,7 +4,7 @@ import { cloneDeep, random } from 'lodash-es'
 import { EmapType } from './types/map'
 import useMapSize from './utils/mapSize'
 
-const map = useMapSize(10)
+const map = useMapSize(20)
 
 const mapList = ref(map.resetMapList())
 
@@ -12,15 +12,10 @@ const computedMapWidth = computed(() => {
   return `${map.size.value * 40}px`
 })
 
-// 生成a-b的随机整数,包含a和b
-function randomBetween(a: number, b: number) {
-  return random(a, b)
-}
-
 function resetPosition(left: number, right: number) {
   const size = map.size.value
-  const x = randomBetween(left, right)
-  const y = randomBetween(left, right)
+  const x = random(left, right)
+  const y = random(left, right)
   const currentType = mapList.value[x][y].type
   if (currentType === EmapType.Empty) {
     return { x, y }
