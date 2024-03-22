@@ -93,7 +93,9 @@ function right() {
 
 function move(x: number, y: number, dir: string) {
   const self = grid[x][y]
-  if (!self) { return }
+  if (!self) {
+    return
+  }
 
   grid[x][y] = undefined
   if (dir === 'up') {
@@ -168,6 +170,7 @@ function isEnded() {
       }
     }
   }
+  // eslint-disable-next-line no-alert
   alert(`您的得分是：${score.value}分`)
 }
 
