@@ -4,7 +4,7 @@ import { cloneDeep, random } from 'lodash-es'
 import { EmapType } from './types/map'
 import useMapSize from './utils/mapSize'
 
-const map = useMapSize(20)
+const map = useMapSize(10)
 
 const mapList = ref(map.resetMapList())
 
