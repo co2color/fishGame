@@ -38,6 +38,11 @@ const router = createRouter({
       name: 'sokoban',
       component: () => import('@/views/sokoban/sokoban.vue'),
     },
+    {
+      path: '/puzzle',
+      name: 'puzzle',
+      component: () => import('@/views/puzzle/puzzle.vue'),
+    },
   ],
 })
 router.beforeEach((to) => {
