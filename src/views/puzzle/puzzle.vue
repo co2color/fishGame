@@ -2,7 +2,7 @@
 import { shuffle } from 'lodash-es'
 import { reactive } from 'vue'
 
-const gridSize = 4
+const gridSize = 3
 
 function randomize(size: number) {
   const arr = Array.from({ length: size ** 2 - 1 }, (_, i) => i + 1)
