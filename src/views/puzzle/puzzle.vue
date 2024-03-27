@@ -1,10 +1,16 @@
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { shuffle } from 'lodash-es'
+import { reactive } from 'vue'
 
-const puzzleGrid = reactive([1, 2, 3, 4, 5, 6, 7, 8, ''])
+function randomize() {
+  return shuffle([1, 2, 3, 4, 5, 6, 7, 8, ''])
+}
+
+const puzzleGrid = reactive(randomize())
+
 const gridSize = 3
 
-function move(index) {
+function move(index: number) {
   const emptyIndex = puzzleGrid.indexOf('')
   if (
     index === emptyIndex - 1
