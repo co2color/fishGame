@@ -1,29 +1,19 @@
-<script>
+<script lang="ts" setup>
 import { reactive, ref } from 'vue'
 
-export default {
-  name: 'Puzzle',
-  setup() {
-    const puzzleGrid = reactive([1, 2, 3, 4, 5, 6, 7, 8, ''])
-    const gridSize = 3
+const puzzleGrid = reactive([1, 2, 3, 4, 5, 6, 7, 8, ''])
+const gridSize = 3
 
-    const move = (index) => {
-      const emptyIndex = puzzleGrid.indexOf('')
-      if (
-        index === emptyIndex - 1
-        || index === emptyIndex + 1
-        || index === emptyIndex - gridSize
-        || index === emptyIndex + gridSize
-      ) {
-        [puzzleGrid[index], puzzleGrid[emptyIndex]] = [puzzleGrid[emptyIndex], puzzleGrid[index]]
-      }
-    }
-
-    return {
-      puzzleGrid,
-      move,
-    }
-  },
+function move(index) {
+  const emptyIndex = puzzleGrid.indexOf('')
+  if (
+    index === emptyIndex - 1
+    || index === emptyIndex + 1
+    || index === emptyIndex - gridSize
+    || index === emptyIndex + gridSize
+  ) {
+    [puzzleGrid[index], puzzleGrid[emptyIndex]] = [puzzleGrid[emptyIndex], puzzleGrid[index]]
+  }
 }
 </script>
 
