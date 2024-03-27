@@ -2,14 +2,14 @@
 import { shuffle } from 'lodash-es'
 import { reactive } from 'vue'
 
-function randomize() {
-  return shuffle([1, 2, 3, 4, 5, 6, 7, 8, ''])
+const gridSize = 4
+
+function randomize(size: number) {
+  const arr = Array.from({ length: size ** 2 - 1 }, (_, i) => i + 1)
+  return shuffle([...arr, ''])
 }
 
-const puzzleGrid = reactive(randomize())
-
-const gridSize = 3
-
+const puzzleGrid = reactive(randomize(gridSize))
 function move(index: number) {
   const emptyIndex = puzzleGrid.indexOf('')
   if (
@@ -24,21 +24,21 @@ function move(index: number) {
 </script>
 
 <template>
-  <div class="puzzle">
-    <div v-for="(item, index) in puzzleGrid" :key="index" class="grid" @click="move(index)">
+  <div
+    class="grid gap-2.5" :style="{
+      'grid-template-columns': `repeat(${gridSize}, 1fr)`,
+      'grid-template-rows': `repeat(${gridSize}, 1fr)`,
+
+    }"
+  >
+    <div v-for="(item, index) in puzzleGrid" :key="index" class="grids" @click="move(index)">
       {{ item }}
     </div>
   </div>
 </template>
 
 <style scoped>
-.puzzle {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-}
-
-.grid {
+.grids {
   display: flex;
   justify-content: center;
   align-items: center;
