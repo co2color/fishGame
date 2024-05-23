@@ -11,7 +11,7 @@ function randomize(size: number) {
 
 const puzzleGrid = reactive(randomize(gridSize))
 function move(index: number) {
-  const emptyIndex = puzzleGrid.indexOf('')
+  const emptyIndex = puzzleGrid.indexOf('');
   if (
     index === emptyIndex - 1
     || index === emptyIndex + 1
