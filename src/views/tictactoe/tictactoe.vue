@@ -27,9 +27,8 @@ const message = ref('')
 
 function makeMove(index: number) {
   // 如果当前格子已经有值或者已经有人赢了，就不允许再走了
-  if (board.value[index] || message.value) {
+  if (board.value[index] || message.value)
     return
-  }
 
   // 下棋
   board.value[index] = currentPlayer.value
