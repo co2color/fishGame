@@ -17,9 +17,9 @@ function resetPosition(left: number, right: number) {
   const x = random(left, right)
   const y = random(left, right)
   const currentType = mapList.value[x][y].type
-  if (currentType === EmapType.Empty) {
+  if (currentType === EmapType.Empty)
     return { x, y }
-  }
+
   return resetPosition(left, size - right)
 }
 
@@ -33,9 +33,9 @@ function getBallPosition() {
   const bottom = mapList.value[x][y + 1].type
   const left = mapList.value[x - 1][y].type
   const right = mapList.value[x + 1][y].type
-  if (top === EmapType.Border || bottom === EmapType.Border || left === EmapType.Border || right === EmapType.Border) {
+  if (top === EmapType.Border || bottom === EmapType.Border || left === EmapType.Border || right === EmapType.Border)
     return getBallPosition()
-  }
+
   return { x, y }
 }
 function getTargetPosition() {
@@ -69,9 +69,8 @@ function setTargetPosition() {
   // 为球推到target上面的时候，target的type就是球了。
   // 而此时如果球被推走了，target原本位置的type就再也不是Target了，所以需要重新设置回来
   const { x: tx, y: ty } = target.value
-  if (mapList.value[tx][ty].type === EmapType.Empty) {
+  if (mapList.value[tx][ty].type === EmapType.Empty)
     mapList.value[tx][ty].type = EmapType.Target
-  }
 }
 
 // 往上，x不动，y--
