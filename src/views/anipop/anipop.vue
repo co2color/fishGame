@@ -33,7 +33,6 @@ function initList(row: number = 10, col: number = 10) {
   return list
 }
 const list = ref(initList())
-console.log(list.value)
 
 function levelAdd() {
   if (level.value >= 5)
