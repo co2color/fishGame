@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+
 interface Render {
   color?: string
   x?: number
@@ -17,7 +18,7 @@ const getColorsByLevel = computed(() => {
 })
 
 const level = ref(1)
-const initList = (row: number = 10, col: number = 10) => {
+function initList(row: number = 10, col: number = 10) {
   const list = [] as Render[][]
   for (let i = 0; i < row; i++) {
     list.push([])
@@ -26,7 +27,7 @@ const initList = (row: number = 10, col: number = 10) => {
         color: getColorsByLevel.value[Math.floor(Math.random() * (level.value + 2))],
         is_null: false,
         x: j * row,
-        y: i * col
+        y: i * col,
       })
     }
   }
@@ -35,24 +36,28 @@ const initList = (row: number = 10, col: number = 10) => {
 const list = ref(initList())
 console.log(list.value)
 
-const levelAdd = () => {
-  if (level.value >= 5) {
+function levelAdd() {
+  if (level.value >= 5)
     return alert('已经超过5级了')
-  }
+
   level.value++
   list.value = initList()
 }
 </script>
+
 <template>
   <div class="game flex justify-center items-center">
-    <button @click="levelAdd">add</button>
+    <button @click="levelAdd">
+      add
+    </button>
     <div class="game-box">
-      <div class="game-list flex" v-for="(rows, row_index) in list" :key="row_index + 'row'">
-        <div class="game-item flex" :style="{ backgroundColor: item.color }" v-for="(item, index) in rows"></div>
+      <div v-for="(rows, row_index) in list" :key="`${row_index}row`" class="game-list flex">
+        <div v-for="(item, index) in rows" class="game-item flex" :style="{ backgroundColor: item.color }" />
       </div>
     </div>
   </div>
 </template>
+
 <style lang="scss" scoped>
 .game {
   width: 100vw;
