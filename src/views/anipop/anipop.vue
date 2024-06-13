@@ -11,13 +11,12 @@ const ITEM_WIDTH = '50px'
 const ITEM_HEIGHT = '50px'
 const allColors = ['orange', 'yellow', 'skyblue', 'pink', 'lightseagreen', 'greenyellow', 'darkseagreen']
 // 随机color = allColors[Math.floor(Math.random() * allColors.length)]
-
+const level = ref(1)
 const getColorsByLevel = computed(() => {
   // 设定5个level，level1用前3个颜色，level+1 => color+1
   return allColors.slice(0, level.value + 2)
 })
 
-const level = ref(1)
 function initList(row: number = 10, col: number = 10) {
   const list = [] as Render[][]
   for (let i = 0; i < row; i++) {
