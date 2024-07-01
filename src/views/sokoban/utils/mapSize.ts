@@ -13,10 +13,10 @@ export default function useMapSize(len: number) {
     for (let i = 0; i < size.value; i++) {
       const row: IMapItemContent[] = []
       for (let j = 0; j < size.value; j++) {
-        if (i === 0 || i === size.value - 1 || j === 0 || j === size.value - 1) {
+        if (i === 0 || i === size.value - 1 || j === 0 || j === size.value - 1)
           row.push({ y: i, x: j, type: EmapType.Border })
-        }
-        else { row.push({ y: i, x: j, type: EmapType.Empty }) }
+
+        else row.push({ y: i, x: j, type: EmapType.Empty })
       }
       map.push(row)
     }
