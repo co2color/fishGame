@@ -29,21 +29,21 @@ function renderItem(color: string, x: number, y: number) {
 function getRandomFoodLocation(_foodCanInBorder: boolean = false) {
   let x = Math.floor((Math.random() * WIDTH) / SIZE)
   let y = Math.floor((Math.random() * HEIGHT) / SIZE)
-  if (_foodCanInBorder) {
+  if (_foodCanInBorder)
     return { x, y }
-  }
-  if (x === 0) {
+
+  if (x === 0)
     x += 1
-  }
-  else if (y === 0) {
+
+  else if (y === 0)
     y += 1
-  }
-  else if (x === WIDTH / SIZE - 1) {
+
+  else if (x === WIDTH / SIZE - 1)
     x -= 1
-  }
-  else if (y === HEIGHT / SIZE - 1) {
+
+  else if (y === HEIGHT / SIZE - 1)
     y -= 1
-  }
+
   return { x, y }
 }
 const foodLocation = ref({
@@ -62,9 +62,9 @@ function touchWallWatch() {
   const headItem = snakeList.value[0]
   // 有待改进，这个函数应该只用于判断蛇头是否在边界处
   // 然后，蛇头如果再动，才算触碰边界
-  if (headItem.y === -1 || headItem.y === HEIGHT / SIZE || headItem.x === -1 || headItem.x === WIDTH / SIZE) {
+  if (headItem.y === -1 || headItem.y === HEIGHT / SIZE || headItem.x === -1 || headItem.x === WIDTH / SIZE)
     return true
-  }
+
   return false
 }
 function touchCallBack() {
@@ -101,18 +101,17 @@ function moveSnake() {
       y: snakeList.value[0].y,
     })
   }
-  if (isEatFood()) {
+  if (isEatFood())
     resetFood()
-  }
-  else {
+
+  else
     snakeList.value.pop()
-  }
 }
 function isEatFood() {
   const headItem = snakeList.value[0]
-  if (headItem.x === foodLocation.value.x && headItem.y === foodLocation.value.y) {
+  if (headItem.x === foodLocation.value.x && headItem.y === foodLocation.value.y)
     return true
-  }
+
   return false
 }
 function resetFood() {
@@ -138,18 +137,17 @@ function startGame() {
   }, 100)
 }
 function watchKeyCallBack(event: KeyboardEvent) {
-  if (event.code === 'KeyW') {
+  if (event.code === 'KeyW')
     currentLocation.value = 'KeyW'
-  }
-  if (event.code === 'KeyS') {
+
+  if (event.code === 'KeyS')
     currentLocation.value = 'KeyS'
-  }
-  if (event.code === 'KeyA') {
+
+  if (event.code === 'KeyA')
     currentLocation.value = 'KeyA'
-  }
-  if (event.code === 'KeyD') {
+
+  if (event.code === 'KeyD')
     currentLocation.value = 'KeyD'
-  }
 }
 function addKeyBoardWatch() {
   document.addEventListener('keydown', watchKeyCallBack)
