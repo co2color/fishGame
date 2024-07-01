@@ -12,6 +12,8 @@ function btnMouseUpClick(e: MouseEvent) {
   }
   is_click_btn.value = false
 }
+const p = useProgressMove()
+
 function btnClick(e: MouseEvent) {
   // console.log(e)
   p.is_start.value ? p.stop() : p.start()
@@ -51,7 +53,7 @@ function useProgressMove(step: number = 1) {
   return { progress_left_px, start, stop, is_start }
 }
 // const { progress_left_px, start, stop, is_start } = useProgressMove()
-const p = useProgressMove()
+
 const { progress_left_px, is_start } = p
 </script>
 
