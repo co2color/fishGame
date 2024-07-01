@@ -32,12 +32,9 @@ function random() {
     for (let i = 0; i < 4; i++) {
       for (let j = 0; j < 4; j++) {
         if (!grid[i][j]) {
-          if (num === 0) {
+          if (num === 0)
             return createNumber(i, j)
-          }
-          else {
-            num--
-          }
+          num--
         }
       }
     }
@@ -64,71 +61,61 @@ function removeNumber(i: number) {
  */
 function up() {
   for (let i = 1; i < 4; i++) {
-    for (let j = 0; j < 4; j++) {
+    for (let j = 0; j < 4; j++)
       move(i, j, 'up')
-    }
   }
 }
 function down() {
   for (let i = 2; i >= 0; i--) {
-    for (let j = 0; j < 4; j++) {
+    for (let j = 0; j < 4; j++)
       move(i, j, 'down')
-    }
   }
 }
 function left() {
   for (let i = 0; i < 4; i++) {
-    for (let j = 1; j < 4; j++) {
+    for (let j = 1; j < 4; j++)
       move(i, j, 'left')
-    }
   }
 }
 function right() {
   for (let i = 0; i < 4; i++) {
-    for (let j = 2; j >= 0; j--) {
+    for (let j = 2; j >= 0; j--)
       move(i, j, 'right')
-    }
   }
 }
 
 function move(x: number, y: number, dir: string) {
   const self = grid[x][y]
-  if (!self) {
+  if (!self)
     return
-  }
 
   grid[x][y] = undefined
   if (dir === 'up') {
     while (x-- > 0) {
-      if (moveTo(self, x, y) === false) {
+      if (moveTo(self, x, y) === false)
         break
-      }
     }
   }
   else if (dir === 'down') {
     while (x++ < 3) {
-      if (moveTo(self, x, y) === false) {
+      if (moveTo(self, x, y) === false)
         break
-      }
     }
   }
   else if (dir === 'left') {
     while (y-- > 0) {
-      if (moveTo(self, x, y) === false) {
+      if (moveTo(self, x, y) === false)
         break
-      }
     }
   }
   else if (dir === 'right') {
     while (y++ < 3) {
-      if (moveTo(self, x, y) === false) {
+      if (moveTo(self, x, y) === false)
         break
-      }
     }
   }
-  if (!self._delete) {
+  if (!self._delete)
     grid[self.x][self.y] = self
-  }
 }
 
 let _moved = false // 是否移动过
@@ -165,9 +152,8 @@ function update() {
 function isEnded() {
   for (let i = 0; i < 4; i++) {
     for (let j = 0; j < 4; j++) {
-      if (!grid[i][j]) {
+      if (!grid[i][j])
         return
-      }
     }
   }
   // eslint-disable-next-line no-alert
