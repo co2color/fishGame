@@ -1,27 +1,15 @@
-<template>
-  <div class="number" :style="style">
-    <div
-      class="appear"
-      :class="{
-        adding: adding,
-        ['level' + item.number]: true
-      }"
-    >
-      {{ item.number }}
-    </div>
-  </div>
-</template>
-
 <script lang="ts" setup>
-import { ref, toRefs, computed, nextTick, watch } from 'vue'
+import { computed, nextTick, ref, toRefs, watch } from 'vue'
 
 // props
 const props = defineProps({
   item: {
     type: Object,
-    default: () => ({})
-  }
+    default: () => ({}),
+  },
 })
+const emit = defineEmits(['remove'])
+
 // 两种方式都可以
 // const item = toRef(props, 'item').value;
 const item = toRefs(props)?.item?.value
@@ -31,14 +19,12 @@ const adding = ref(false)
 const zIndex = ref(1)
 
 const style = computed(() => {
-  let transform = `translate(${item.y * 110}px,${item.x * 110}px)`
+  const transform = `translate(${item.y * 110}px,${item.x * 110}px)`
   return {
     transform,
-    zIndex: item.number + zIndex.value
+    zIndex: item.number + zIndex.value,
   }
 })
-
-const emit = defineEmits(['remove'])
 
 watch(
   () => item.number,
@@ -49,12 +35,12 @@ watch(
         adding.value = false
       }, 200)
     })
-  }
+  },
 )
 
 watch(
   () => item._delete,
-  val => {
+  (val) => {
     if (val) {
       zIndex.value = 0
       nextTick(() => {
@@ -63,9 +49,23 @@ watch(
         }, 200)
       })
     }
-  }
+  },
 )
 </script>
+
+<template>
+  <div class="number" :style="style">
+    <div
+      class="appear"
+      :class="{
+        adding,
+        [`level${item.number}`]: true,
+      }"
+    >
+      {{ item.number }}
+    </div>
+  </div>
+</template>
 
 <style scoped>
 .number {
